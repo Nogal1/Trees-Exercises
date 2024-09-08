@@ -1,5 +1,6 @@
-/** BinaryTreeNode: node for a general tree. */
-
+/** BinaryTreeNode: node for a general tree. 
+ * Each node contains a value and two children (left and right).
+*/
 class BinaryTreeNode {
   constructor(val, left = null, right = null) {
     this.val = val;
@@ -8,13 +9,18 @@ class BinaryTreeNode {
   }
 }
 
+/**
+ * BinaryTree: Represents a binary tree structure with a root node.
+ */
 class BinaryTree {
   constructor(root = null) {
     this.root = root;
   }
 
   /** minDepth(): return the minimum depth of the tree -- that is,
-   * the length of the shortest path from the root to a leaf. */
+   * the length of the shortest path from the root to a leaf.
+   * @returns {number} The minimum depth of the tree.
+   */
 
   minDepth() {
     if (!this.root) return 0;
@@ -29,8 +35,9 @@ class BinaryTree {
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
-   * the length of the longest path from the root to a leaf. */
-
+   * the length of the longest path from the root to a leaf. 
+   * @returns {number} The maximum depth of the tree.
+   */
   maxDepth() {
     if (!this.root) return 0;
 
@@ -43,19 +50,28 @@ class BinaryTree {
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
-   * The path doesn't need to start at the root, but you can't visit a node more than once. */
-
+   * The path doesn't need to start at the root, but you can't visit a node more than once. 
+   * @returns {number} The maximum path sum in the tree.
+   */
   maxSum() {
-    let result = { max: -Infinity};
+    if (!this.root) return 0;
+
+    let result = { max: -Infinity };
 
     function maxPathSumHelper(node) {
       if (!node) return 0;
 
+      // Get the maximum path sum for the left and right children
       let leftMax = Math.max(0, maxPathSumHelper(node.left));
-      let rightMax = Math.max(0, maxPathSumHelper(node.left));
+      let rightMax = Math.max(0, maxPathSumHelper(node.right));
 
-      result.max = Math.max(result.max, node.val + leftMax + rightMax);
+      // Calculate the maximum sum of the current node plus left and right paths
+      let currentMax = node.val + leftMax + rightMax;
 
+      // Update the result with the maximum value found so far
+      result.max = Math.max(result.max, currentMax);
+
+      // Return the maximum sum of one side plus the current node
       return node.val + Math.max(leftMax, rightMax);
     }
 
@@ -64,8 +80,10 @@ class BinaryTree {
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
-   * which is larger than lowerBound. Return null if no such value exists. */
-
+   * which is larger than lowerBound. Return null if no such value exists. 
+   * @param {number} lowerBound - The value to compare node values against.
+   * @returns {number | null} The smallest value greater than lowerBound, or null if none exists.
+   */
   nextLarger(lowerBound) {
     if (!this.root) return null;
 

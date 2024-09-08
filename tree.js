@@ -1,4 +1,6 @@
-/** TreeNode: node for a general tree. */
+/** TreeNode: node for a general tree. 
+ * Each node contains a value and a array of child nodes.
+*/
 
 class TreeNode {
   constructor(val, children = []) {
@@ -7,13 +9,17 @@ class TreeNode {
   }
 }
 
+/**
+ * Tree: Represents an n-ary tree structure with a root node.
+ */
 class Tree {
   constructor(root = null) {
     this.root = root;
   }
 
-  /** sumValues(): add up all of the values in the tree. */
-
+  /** sumValues(): add up all of the values in the tree. 
+   * @returns {number} The sum of all the node values.
+  */
   sumValues() {
     if (!this.root) return 0;
 
@@ -28,8 +34,9 @@ class Tree {
     return sumHelper(this.root);
   }
 
-  /** countEvens(): count all of the nodes in the tree with even values. */
-
+  /** countEvens(): count all of the nodes in the tree with even values. 
+   * @returns {number} The count of even-valued nodes.
+  */
   countEvens() {
     if (!this.root) return 0;
 
@@ -45,8 +52,10 @@ class Tree {
   }
 
   /** numGreater(lowerBound): return a count of the number of nodes
-   * whose value is greater than lowerBound. */
-
+   * whose value is greater than lowerBound. 
+   *  @param {number} lowerBound - The value to compare node values against.
+   * @returns {number} The count of nodes with values greater than lowerBound.
+   */
   numGreater(lowerBound) {
     if (!this.root) return 0;
 
