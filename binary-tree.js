@@ -1,3 +1,5 @@
+const { Tree } = require("./tree");
+
 /** BinaryTreeNode: node for a general tree. 
  * Each node contains a value and two children (left and right).
 */
@@ -106,32 +108,102 @@ class BinaryTree {
 
   /** Further study!
    * areCousins(node1, node2): determine whether two nodes are cousins
-   * (i.e. are at the same level but have different parents. ) */
-
+   * (i.e. are at the same level but have different parents. ) 
+   * * @param {BinaryTreeNode} node1 - The first node.
+   * @param {BinaryTreeNode} node2 - The second node.
+   * @returns {boolean} True if the nodes are cousins, otherwise false.
+   */
   areCousins(node1, node2) {
+    if (!this.root || node1 === this.root || node2 === this.root) return false;
 
+    // Helper function to find both parent and depth of a node
+    function findParentAndDepth(node, target, depth = 0, parent = null) {
+      if (!node) return null;
+      if (node === target) return { parent, depth };
+
+      let leftResult = findParentAndDepth(node.left, target, depth + 1, node);
+      if (leftResult) return leftResult;
+
+      return findParentAndDepth(node.right, target, depth + 1, node);
+    }
+
+    const node1Info = findParentAndDepth(this.root, node1);
+    const node2Info = findParentAndDepth(this.root, node2);
+
+    // Check if both nodes exist and have the same depth but different parents
+    if (!node1Info || !node2Info) return false;
+    return (
+      node1Info.depth === node2Info.depth && node1Info.parent !== node2Info.parent
+    );
   }
 
   /** Further study!
-   * serialize(tree): serialize the BinaryTree object tree into a string. */
+   * serialize(tree): serialize the BinaryTree object tree into a string. 
+   * This method converts the tree into an array-like format for easy storage or transmission.
+   * @returns {string} The serialized tree as a string.
+   */
 
-  static serialize() {
+  static serialize(tree) {
+    const result = [];
 
+    function serializeHelper(node) {
+      if (!node) {
+        result.push('null');
+        return;
+      }
+      result.push(node.val);
+      serializeHelper(node.left);
+      serializeHelper(node.right);
+    }
+
+    serializeHelper(tree.root);
+    return JSON.stringify(result);
   }
 
   /** Further study!
-   * deserialize(stringTree): deserialize stringTree into a BinaryTree object. */
+   * deserialize(stringTree): deserialize stringTree into a BinaryTree object. 
+   * This method reconstructs the original binary tree from the serialized format.
+   * @param {string} data - The serialized tree string.
+   * @returns {BinaryTree} The deserialized binary tree.
+   */
+  static deserialize(data) {
+    const values = JSON.parse(data);
 
-  static deserialize() {
+    function deserializeHelper() {
+      if (values.length === 0) return null;
+      let val = values.shift();
+      if (val === 'null') return null;
 
+      let node = new BinaryTreeNode(val);
+      node.left = deserializeHelper();
+      node.right = deserializeHelper();
+      return node;
+    }
+
+    let root = deserializeHelper();
+    return new BinaryTree(root);
   }
 
   /** Further study!
    * lowestCommonAncestor(node1, node2): find the lowest common ancestor
-   * of two nodes in a binary tree. */
-
+   * of two nodes in a binary tree. 
+   * The LCA is the lowest node that has both p and q as descendants (where a node can be a descendant of itself).
+   * @param {BinaryTreeNode} p - The first node.
+   * @param {BinaryTreeNode} q - The second node.
+   * @returns {BinaryTreeNode} The LCA of the two nodes.
+   */
   lowestCommonAncestor(node1, node2) {
-    
+    function lcaHelper(node) {
+      if (!node || node === node1 || node === node2) return node;
+
+      let left = lcaHelper(node.left);
+      let right = lcaHelper(node.right);
+
+      if (left && right) return node;
+      return left || right;
+    }
+
+    return lcaHelper(this.root);
   }
 }
 
